@@ -1,41 +1,41 @@
 CC = gcc
 ASM = nasm
-CFLAGS = -m32 -ffreestanding -nostdlib -nostartfiles -nodefaultlibs \
-         -fno-pic -fno-pie -fno-stack-protector -fno-builtin \
-         -fno-exceptions -fno-asynchronous-unwind-tables \
-         -fno-unwind-tables -fno-ident -I src/ \
-         -mgeneral-regs-only -mno-sse -mno-mmx -mno-red-zone
+CFLAGS = -m32 -ffreestanding -nostdlib -I src/ -fno-builtin
 ASMFLAGS = -f elf32
 LD = ld
-LDFLAGS = -m elf_i386 -T src/linker.ld -nostdlib -n -s
+LDFLAGS = -m elf_i386 -T src/linker.ld -nostdlib -n
 
-# Добавьте kprint.c в список исходных файлов
-C_SOURCES = src/kernel.c src/kprint.c
+# Добавляем shell.c
+C_SOURCES = src/kernel.c src/kprint.c src/keyboard.c src/shell.c
 ASM_SOURCES = src/multiboot_header.asm
 
-# Объектные файлы
 C_OBJECTS = $(C_SOURCES:src/%.c=build/%.o)
 ASM_OBJECTS = $(ASM_SOURCES:src/%.asm=build/%.o)
 OBJECTS = $(C_OBJECTS) $(ASM_OBJECTS)
 
-all: kernel.bin
+all: os.iso
+
+os.iso: kernel.bin
+	mkdir -p iso/boot/grub
+	cp kernel.bin iso/boot/
+	echo 'menuentry "Dasteldi OS - 1.2" { multiboot /boot/kernel.bin; boot }' > iso/boot/grub/grub.cfg
+	grub-mkrescue -o dasteldi.iso iso
 
 kernel.bin: $(OBJECTS)
-	@echo "Linking kernel..."
 	$(LD) $(LDFLAGS) -o $@ $^
-	@echo "Kernel built: kernel.bin"
 
 build/%.o: src/%.c
 	@mkdir -p build
-	@echo "Compiling $<..."
 	$(CC) $(CFLAGS) -c $< -o $@
 
-build/multiboot_header.o: src/multiboot_header.asm
+build/%.o: src/%.asm
 	@mkdir -p build
-	@echo "Assembling $<..."
 	$(ASM) $(ASMFLAGS) -o $@ $<
 
 clean:
-	rm -rf build kernel.bin
+	rm -rf build kernel.bin os.iso isodir
 
-.PHONY: all clean
+run: os.iso
+	qemu-system-x86_64 -cdrom os.iso
+
+.PHONY: all clean run

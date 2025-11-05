@@ -8,16 +8,13 @@ multiboot_header:
 
 section .text
 global _start
-extern kernel_main  ; Используем kernel_main вместо _start
+extern kernel_main  
 
 _start:
-    ; Устанавливаем стек
     mov esp, _stack_top
     
-    ; Вызываем основную функцию C
     call kernel_main
     
-    ; Если функция вернулась
     cli
 .hang:
     hlt
