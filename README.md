@@ -24,7 +24,6 @@
 - **NASM** or **GAS** (assembler)
 - **GRUB** (bootloader tools)
 - **QEMU** (for emulation/testing)
-- **Make**(for make a project)
 
 ### Build
 
