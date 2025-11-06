@@ -23,15 +23,28 @@ void shell_run(void) {
                         kprint_clear();
                     }
                     else if (input[0] == 'i' && input[1] == 'n' && input[2] == 'f' && input[3] == 'o' && input[4] == '\0') {
+                        kprint_set_color(COLOR_LIGHT_CYAN, COLOR_BLACK);
                         kprint("Dasteldi OS v1.2 - Simple Operating System\n");
+                        kprint("RAM: ");
+                        kprint_set_color(COLOR_WHITE, COLOR_BLACK);
+                        kprint("undefiend\n");
+                        kprint_set_color(COLOR_LIGHT_CYAN, COLOR_BLACK);
+                        kprint("CPU: ");
+                        kprint_set_color(COLOR_WHITE, COLOR_BLACK);
+                        kprint("undefiend\n");
+                        kprint_set_color(COLOR_LIGHT_CYAN, COLOR_BLACK);
+                        kprint("Author: Dasteldi\n");
+                        kprint_set_color(COLOR_WHITE, COLOR_BLACK);
                     }
                     else if (input[0] == 'e' && input[1] == 'c' && input[2] == 'h' && input[3] == 'o' && input[4] == ' ') {
                         kprint(input + 5);
                         kprint("\n");
                     }
                     else {
+                        kprint_set_color(COLOR_LIGHT_RED, COLOR_BLACK);
                         kprint("Unknown command: ");
                         kprint(input);
+                        kprint_set_color(COLOR_WHITE, COLOR_BLACK);
                         kprint("\n");
                     }
                 }

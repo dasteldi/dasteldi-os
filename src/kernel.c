@@ -4,6 +4,7 @@
 
 void kernel_main(void) {
     kprint_clear();
+    kprint_set_color(COLOR_WHITE, COLOR_BLACK);
     kprint("Welcome to Dasteldi OS!\n");
     kprint("Type 'help' for commands\n");
     
